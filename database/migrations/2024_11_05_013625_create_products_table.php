@@ -14,9 +14,10 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0); // Default value set to 0
             $table->timestamps();
         });
+
     }
 
     public function down()

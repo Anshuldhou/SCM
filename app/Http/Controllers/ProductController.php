@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/ProductController.php
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -8,48 +7,46 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    // Display a listing of the products.
     public function index()
     {
         $products = Product::all();
         return view('products.index', compact('products'));
     }
 
+    // Show the form for creating a new product.
     public function create()
     {
         return view('products.create');
     }
 
+    // Store a newly created product in the database.
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'quantity' => 'required|integer',
+            'quantity' => 'nullable|integer' // Validate quantity if provided
         ]);
 
-        Product::create($validated);
-        return redirect()->route('products.index')->with('success', 'Product added successfully!');
+        // Set default quantity to 0 if not provided
+        $productData = $request->only('name', 'description', 'price');
+        $productData['quantity'] = $request->input('quantity', 0); // Default to 0
+
+        Product::create($productData);
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully!');
     }
 
+
+    // Show the form for editing an existing product.
     public function edit(Product $product)
     {
         return view('products.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-        ]);
-
-        $product->update($validated);
-        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
-    }
-
+    // Delete a product from the database.
     public function destroy(Product $product)
     {
         $product->delete();
