@@ -52,4 +52,18 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }
+    public function update(Request $request, Product $product)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+        ]);
+
+        $product->update($request->only('name', 'description', 'price', 'quantity'));
+
+        // Redirect to the products index page with a success message
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+    }
 }
