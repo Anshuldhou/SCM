@@ -42,4 +42,15 @@ class OrderController extends Controller
 
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
+    public function edit($id)
+    {
+        // Retrieve the specific order by its ID
+        $order = Order::findOrFail($id);
+        $products = Product::all();
+        $suppliers = Supplier::all();
+
+        // Pass the order data to the edit view (e.g., 'orders.edit')
+        return view('orders.edit', compact('order', 'products', 'suppliers'));
+    }
+
 }

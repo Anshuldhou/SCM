@@ -26,9 +26,18 @@
                         <td>{{ $order->quantity }}</td>
                         <td>${{ $order->total_price }}</td>
                         <td>
-                            <!-- You can add edit and delete buttons here -->
+                            <!-- Edit Button -->
+                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-primary btn-sm">Edit</a>
+
+                            <!-- Delete Button (with a form for security) -->
+                            <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this order?')">Delete</button>
+                            </form>
                         </td>
                     </tr>
+
                 @endforeach
                 </tbody>
             </table>
